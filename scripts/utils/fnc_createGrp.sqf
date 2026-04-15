@@ -1,3 +1,6 @@
+// very simple script to make creating OPFOR groups a little more tidy.
+// also adds a small event handler for a makeshift killfeed.
+
 params [
 	"_spawnPos",
 	"_classData",

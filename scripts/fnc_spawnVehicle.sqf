@@ -1,3 +1,8 @@
+// Custom code for spawning any goddamned thing I wanted.
+// Primarily used for player spawn, wherein players are given EVERY SINGLE type (keyword "type") of vehicle in the game.
+// Each vehicle had a little laptop sat nearby where you could specify which vehicle of that type you wanted.
+// For example, a transport helicopter spawns, but the player wants an attack helicopter. The laptop (and this code) handles safely deleting the transport heli and replacing it with an attack heli.
+
 params [
     "_pos",   // Object or marker to spawn at
     "_vehicleType",   // Classname of vehicle to spawn
@@ -7,12 +12,13 @@ params [
 ];
 
 private _scanRadius = 20;
-private _rawNearby = nearestObjects [_pos, ["Car", "Tank", "Air", "UAV", "UGV_01_base_F"], _scanRadius];
+private _rawNearby = nearestObjects [_pos, ["Car", "Tank", "Air", "UAV", "UGV_01_base_F"], _scanRadius]; // get a list of all the nearest possible vehicles
 private _nearby = [];
 
-if (_base == "") then { // Select nearest similar vehicle
+// Select nearest vehicle
+if (_base == "") then { // If the vehicle so happens to be the "base" vehicle of that type, just select it.
     _nearby = _rawNearby select {typeOf _x == _vehicleType};
-} else {
+} else { // Else, select the nearest thing of that base type
     _nearby = _rawNearby select {_x isKindOf _base};
 };
 
@@ -21,7 +27,7 @@ if (_base == "") then { // Select nearest similar vehicle
     {
         private _veh = _x;
 
-        if (!alive _veh || {damage _veh > 0.5} || {fuel _veh > 0.99}) then { // Filter damaged, wrecked, or used vehicles of the same type...
+        if (!alive _veh || {damage _veh > 0.5} || {fuel _veh > 0.99}) then { // Filter damaged, wrecked, or used vehicles of the same type (most likely in-use)...
             deleteVehicle _veh; // ...and delete it.
         };
     } forEach _nearby;

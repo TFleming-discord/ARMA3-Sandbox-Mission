@@ -1,3 +1,8 @@
+// THE MEAT AND POTATOES.
+// This entire file is dedicated to making "opforAnger" work.
+// TL;DR, as the players complete objectives, OPFOR would get increasingly angry at them, sending larger and larger threats to try and stop them.
+
+// for reference later
 // params [
 // 	"_varName", // Variable name for squad
 // 	"_classData", // Array of class names for the soldiers within the squad
@@ -7,6 +12,7 @@
 // 	["_vehDir", 0] // Optional vehicle direction, default none.
 // ];
 
+// premade squads for ease of programming
 private _fireTeam = ["O_Soldier_TL_F", "O_Soldier_GL_F", "O_Soldier_AR_F", "O_Soldier_LAT_F"]; // Unused. ArmA default "Fire Team". More for reference
 private _myFireTeam = ["O_Soldier_TL_F", "O_Soldier_GL_F", "O_Soldier_AR_F", "O_medic_F"];
 private _assaultSquad = ["O_Soldier_SL_F", "O_HeavyGunner_F", "O_soldier_M_F", "O_Soldier_LAT_F", "O_Soldier_AR_F", "O_Soldier_AAR_F", "O_Sharpshooter_F", "O_medic_F"];
@@ -16,18 +22,18 @@ private _crew = ["O_crew_F", "O_crew_F", "O_crew_F"];
 private _playerPos = position player; // Get player pos
 private _angle = random 360; // Get random angle
 
-//== Opfor anger level 0 ==
+//== Opfor anger level 0, one objective completed. no immediate response ==
 if (opforAnger <= 1) then {
 	hint "OPCOM Anger level 0, OPCOM does not care about you yet.";
 };
 
-//== Opfor anger level 1 == Small recon squad
+//== Opfor anger level 1 , two objectives completed, small recon squad response ==
 if (opforAnger == 2) then {
 
 	private _distance = 100 + random 50; // "Random distance between 100 and 150"
 	private _spawnPos = _playerPos getPos [_distance, _angle]; // Spawn point for reinforcement
 
-	// Create group
+	// Create group with custom function
 		private _grp = [_spawnPos, _myFireTeam, 0.35] call sandbox_fnc_createGrp;
 	// ==
 
@@ -49,19 +55,21 @@ if (opforAnger == 2) then {
 	hint "OPCOM Anger level 1\nSmall fire teams are investigating your presence.";
 };
 
-//== Opfor anger level 2 == Full assault squad in transport truck
+//== Opfor anger level 2, three objectives completed, Full assault squad in transport truck response ==
 if (opforAnger == 3) then {
 
 	private _distance = 200 + random 100; // "Random distance between 100 and 150"
 	private _spawnPos = _playerPos getPos [_distance, _angle]; // Spawn point for reinforcement
 
+	// Create group
 	private _grp = [_spawnPos, _assaultSquad, 0.45] call sandbox_fnc_createGrp;
+	// ==
 
-	// Determining a safe spawn location for motorized infantry ==
+	// Determining a safe spawn location for motorized infantry with custom function ==
 		_safePos = [_spawnPos, "O_Truck_02_transport_F"] call sandbox_fnc_safeSpawn;
 	// ==
 
-	// Create group
+	// Create vehicle for group
 		private _veh = createVehicle ["O_Truck_02_transport_F", _safePos, [], 0, "NONE"];
 		{
 			_x moveInAny _veh;
@@ -96,7 +104,7 @@ if (opforAnger == 3) then {
 	hint "OPCOM Anger level 2\nMotorized assault squads are being dispatched because of your actions.";
 };
 
-//== Opfor anger level 3 == Two full assault squads in transport trucks and an armed recon vehicle
+//== Opfor anger level 3, four objectives completed, Two full assault squads in transport trucks and an armed recon vehicle ==
 if (opforAnger == 4) then {
 
 	private _distance = 300 + random 100; // "Random distance between 300 and 400"
@@ -105,10 +113,11 @@ if (opforAnger == 4) then {
 	// Create TWO motorized squads
 		for "_i" from 0 to 1 do {
 			
-			// Create a group (with a custom function!!!)
+			// Create group
 			private _grp = [_spawnPos, _assaultSquad, 0.6] call sandbox_fnc_createGrp;
+			// ==
 
-			// Determine a safe spawn location by seeing if you can put a whole truck there first (with a custom function!!!)
+			// Determine a safe spawn location by seeing if you can safely put a whole fucking truck there first
 				_safePos = [_spawnPos, "O_Truck_02_transport_F"] call sandbox_fnc_safeSpawn;
 			// ==
 
@@ -180,7 +189,7 @@ if (opforAnger == 4) then {
 	hint "OPCOM Anger level 3\nMotorized assault squads and vehicles are being sent to stop your chaos.";
 };
 
-//== Opfor anger level 4 == Light APC, transport truck, and a light attack helicopter
+//== Opfor anger level 4, five objectives completed, Light APC, transport truck, and a light attack helicopter response ==
 if (opforAnger == 5) then {
 
 	private _distance = 300 + random 100; // "Random distance between 100 and 150"
@@ -282,7 +291,7 @@ if (opforAnger == 5) then {
 	hint "OPCOM Anger level 4\nAir AND Mechanized units are looking to halt your destruction.";
 };
 
-//== Opfor anger level 5 == Tank, transport truck, and a heavy attack helicopter
+//== Opfor anger level 5, ALL objectives completed, Tank, transport truck, and a heavy attack helicopter ==
 if (opforAnger == 6) then {
 
 	private _distance = 400 + random 200; // "Random distance between 400 and 600"

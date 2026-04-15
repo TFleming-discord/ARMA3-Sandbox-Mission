@@ -8,6 +8,10 @@ Usage:
 [] call fnc_resetEverything;
 */
 
+// look at that old ass comment lmfaoooo
+// it's right, though. This file is solely dedicated to letting players soft-reset the mission at will via a secluded laptop inside of player spawn.
+// Granted, everything has to be hard-coded. EVERYTHING has a spawn point. EVERYTHING has a set layout.
+
 private _reconSquad = ["O_recon_TL_F", "O_recon_medic_F", "O_recon_exp_F", "O_recon_M_F", "O_recon_F", "O_recon_JTAC_F", "O_Pathfinder_F"];
 private _guardSquad = ["O_soldierU_SL_F", "O_soldierU_medic_F", "O_soldierU_LAT_F", "O_soldierU_F"];
 private _atSquadHeavy = ["O_Soldier_TL_F", "O_Soldier_HAT_F", "O_Soldier_HAT_F", "O_Soldier_AHAT_F"];
@@ -32,6 +36,7 @@ private _resetTable = [
 
 	
 
+	// Everything below is EVERY SINGLE INSTANCE of a "thing" outside of player spawn, hardcoded with it's name, spawn point, and parameters.
 	// Chelonisi (Island)
 	["group", "islandBridgeGuards", "islandBridgeGuards", ["O_Soldier_AT_F", "O_HeavyGunner_F"]],
 	["group", "islandBaseSquad", "islandBaseSquad", _reconSquad, [islandBaseWander, 20, 15]],
@@ -103,7 +108,7 @@ private _resetTable = [
 	["obj", "factoryBunker_1", "factoryBunker_1", "Land_BagBunker_Small_F", 1, true],
 	["obj", "factoryBunker_2", "factoryBunker_2", "Land_BagBunker_Small_F", 358, true],
 
-	//Firni
+	//Firni (depricated, ew, gross)
 	// ["group", "firniSquad_1", "firniSquad_1", _guardSquad, [firniWander, 50, 25]],
 	// ["group", "firniSquadAT", "firniSquad_1", _atSquadHeavy, [firniWander, 50, 25]],
 	// ["group", "firniSquad_2", "firniSquad_2", _guardSquad, [firniWander, 50, 25]],
@@ -112,12 +117,13 @@ private _resetTable = [
 	// ["heli", "firniHeli", "firniVehicle", "O_Heli_Light_02_dynamicLoadout_F", 90, ["O_crew_F", "O_crew_F"], "firniHeliSquad", [firniWander, 100, 20], "FLY"]
 
 	//USS Liberty
+	// Where I stopped and haven't picked up since.
 	//VEHICLE FORMAT: ["veh", varName, spawnMarker, className, bearing, crewArray(Optional), crewVarName(Optional), crewWanderZoneArray(Optional)]
 	["ship", "destroyer120", "destroyer120Spawn", "B_Ship_Gun_01_F", [0, -78.5, 14.5], 180, ["O_crew_F"], "destroyer120CSAT"]
 
 ];
 
-{
+{ // okay, now actually start resetting things
     private _entry = _x;
 	private _type = _entry select 0;
 
@@ -158,7 +164,7 @@ private _resetTable = [
 				sleep 0.1; // Let units spawn before assigning them a wander zone
 				if !(_zone isEqualTo []) then {
 					//systemChat format ["Assigning %1 to patrol %2 with a radius of %3 and a timeout of %4!", _grp, _zone select 0, _zone select 1, _zone select 2];
-					[_grp, getPos (_zone select 0), (_zone select 1), [], (_zone select 2)] call sandbox_fnc_taskPatrolBounded;
+					[_grp, getPos (_zone select 0), (_zone select 1), [], (_zone select 2)] call sandbox_fnc_taskPatrolBounded; //woahg... custom function...
 				};
 			};
 		};
@@ -339,7 +345,7 @@ private _resetTable = [
 	};
 } forEach _resetTable;
 
-
+// Old code for the Firni task.
 ([0,0,0] nearestObject 1061837) setDamage 0;
 ([0,0,0] nearestObject 1061749) setDamage 0;
 taskActiveBuilding = true;
